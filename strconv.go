@@ -2,15 +2,15 @@ package mantis
 
 import (
 	"bytes"
-	"io/ioutil"
-	"golang.org/x/text/encoding/traditionalchinese"
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
-	"os/exec"
-	"os"
 	"crypto/md5"
 	"encoding/hex"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/encoding/traditionalchinese"
+	"golang.org/x/text/transform"
 	"io"
+	"io/ioutil"
+	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -65,11 +65,15 @@ func EncodeBig5(s []byte) ([]byte, error) {
 	}
 	return d, nil
 }
+
 // 简体中文转台湾繁体中文，需要安装opencc
-func Trans2TW(s string) string {
+func Trans2TW(s string, config string) string {
+	if config == "" {
+		config = "s2twp.json"
+	}
 	filepath := "/tmp/" + GetMD5Hash(s)
 	writeToFile(filepath, s)
-	cmd := exec.Command("opencc", "-c", "s2tw.json", "-i", filepath, "-o", filepath)
+	cmd := exec.Command("opencc", "-c", config, "-i", filepath, "-o", filepath)
 	cmd.Run()
 	b, _ := ioutil.ReadFile(filepath)
 	os.Remove(filepath)

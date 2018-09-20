@@ -13,3 +13,4 @@
 .idea
 vendor
 glide.lock
+go.sum
